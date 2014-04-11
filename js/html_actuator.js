@@ -27,6 +27,9 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
     if (metadata.terminated) {
       if (metadata.over) {
         self.message(false); // You lose
+
+        $.post("localhost:3000/submit.json", {username: "Ryan", score : metadata.score, board : JSON.stringify(this.grid)});
+        console.log({username: "Ryan", score : metadata.score, board : JSON.stringify(this.grid)});
       } else if (metadata.won) {
         self.message(true); // You win!
       }

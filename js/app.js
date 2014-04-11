@@ -1,7 +1,10 @@
 // Express initialization
 var express = require('express');
-var app = express(express.logger());
-app.use(express.bodyParser());
+var logger = require('morgan');
+var bodyParser = require('body-parser');
+var app = express(); 
+app.use(bodyParser());
+app.use(logger());
 app.set('title', 'nodeapp');
 
 // Mongo initialization, setting up a connection to a MongoDB  (on Heroku or localhost)
@@ -18,6 +21,7 @@ app.all('*', function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
 });
 
@@ -28,21 +32,16 @@ app.get('/', function (request, response) {
 
 app.get('/scores.json', function(request, response) {
   var username = request.query.username; // dealing with a query variable
-  // Example: on your web browser, go to http://[domain here, e.g., localhost]:3000/data.json?username=batman
+  // Example: on your web browser, go to http://[domain here, e.g., localhost]:3000/scores.json?username=joker
   console.log("I see a username: " + username)
   response.set('Content-Type', 'text/json');
   response.send('{"username": ' + username + '}');
 });
 
-// app.get('/fool', function(request, response) {
-//   response.set('Content-Type', 'text/html');
-//   response.send(500, 'Something broke!');
-// });
-
 app.post('/submit.json', function(request, response) {
   // Send data to this web application via:
-  //   curl --data "playdata=blah..." http://[domain here, e.g., localhost]:3000/play
-  userinput = request.body.playdata;
+  //   curl --data "playdata=blah..." http://[domain here, e.g., localhost]:3000/submit.json
+  userinput = request.query.username;
   console.log("Someone sent me some data: " + userinput);
 
   // Let's insert whatever was sent to this web application (read: NSFW) to a collection named 'abyss' on MongoDB
@@ -59,5 +58,4 @@ app.post('/submit.json', function(request, response) {
   });
 });
 
-// Oh joy! http://stackoverflow.com/questions/15693192/heroku-node-js-error-web-process-failed-to-bind-to-port-within-60-seconds-of
 app.listen(process.env.PORT || 3000);
