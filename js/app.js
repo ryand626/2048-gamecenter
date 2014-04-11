@@ -39,6 +39,7 @@ app.get('/scores.json', function(request, response) {
 });
 
 app.post('/submit.json', function(request, response) {
+  console.log("HASLDJAS");
   // Send data to this web application via:
   //   curl --data "playdata=blah..." http://[domain here, e.g., localhost]:3000/submit.json
   userinput = request.query.username;
