@@ -17,6 +17,8 @@ var db = mongo.Db.connect(mongoUri, function (error, databaseConnection) {
   db = databaseConnection;
 });
 
+var documentScores;
+
 app.all('*', function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
@@ -27,7 +29,7 @@ app.all('*', function(req, res, next) {
 
 app.get('/', function (request, response) {
   response.set('Content-Type', 'text/html');
-  response.send('<p>PAGE LOAD HOORAY</p>');
+  response.send('Derp');
 });
 
 app.get('/scores.json', function(request, response) {
@@ -39,6 +41,11 @@ app.get('/scores.json', function(request, response) {
 });
 
 app.post('/submit.json', function(request, response) {
+  documentScores = request;
+
+  db.collection('scores').insert(documentScores, function(error, collection){
+    console.log("beep");
+  });
   console.log("HASLDJAS");
   // Send data to this web application via:
   //   curl --data "playdata=blah..." http://[domain here, e.g., localhost]:3000/submit.json
@@ -51,7 +58,7 @@ app.post('/submit.json', function(request, response) {
   db.collection('abyss', function(error, collection) {
 
     // 2. Put data into the collectiontheDocument = {"dump":userinput};
-    collection.insert(theDocument, function(error, saved) {
+    collection.insert(userinput, function(error, saved) {
 
       // What you really want to do here: if there was an error inserting the data into the collection in MongoDB, send an error. Otherwise, send OK (e.g., 200 status code)
       response.send(200);

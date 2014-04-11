@@ -28,8 +28,8 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
       if (metadata.over) {
         self.message(false); // You lose
 
-        $.post("/submit.json", {"username" : "Ryan", "score" : metadata.score, "grid" : JSON.stringify(this.grid), "created at" : new Date()});
-        console.log({"username" : "Ryan", "score" : metadata.score, "grid" : JSON.stringify(this.grid), "created at" : new Date()});
+        $.post("http://nameless-harbor-2839.herokuapp.com/submit.json", {"username" : "Ryan", "score" : metadata.score, "grid" : JSON.stringify(grid.serialize()), "created at" : new Date()});
+        console.log({"username" : "Ryan", "score" : metadata.score, "grid" : JSON.stringify(grid.serialize()), "created at" : new Date()});
       } else if (metadata.won) {
         self.message(true); // You win!
       }
